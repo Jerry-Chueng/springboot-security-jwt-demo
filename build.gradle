@@ -42,11 +42,11 @@ tasks.withType(JavaCompile) {
 // java编译的时候缺省状态下会因为中文字符而失败
 [compileJava,compileTestJava,javadoc]*.options*.encoding = 'UTF-8'
 
-//configurations {
-//	compileOnly {
-//		extendsFrom annotationProcessor
-//	}
-//}
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
 
 repositories {
     mavenLocal()
