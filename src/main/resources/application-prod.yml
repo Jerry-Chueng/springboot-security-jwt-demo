@@ -1,0 +1,17 @@
+logging:
+  level:
+    root: debug
+    com:
+      jerry: debug
+  path: logs
+  file:
+    max-size: 100MB
+    max-history: 7
+
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://localhost:3306/demo
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: 1qaz2wsx

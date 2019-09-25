@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jerry.base.authority.dao.RoleMapper">
+  <resultMap id="BaseResultMap" type="com.jerry.base.authority.entity.Role">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modifyTime" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id,`name`, createTime, modifyTime, remark
+  </sql>
+
+  <select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="findByName" parameterType="string" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_role
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+
+  <select id="findAll" parameterType="com.jerry.base.authority.vo.QueryVO" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_role
+    <where>
+      <if test="keyword != null and keyword != ''">
+        CONCAT_WS(',',name,remark)  LIKE concat('%',#{keyword},'%')
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteById" parameterType="list">
+    delete from t_role
+    where id in
+    <foreach collection="ids" item="id" separator="," open="(" close=")">
+      #{id,jdbcType=BIGINT}
+    </foreach>
+  </delete>
+
+  <delete id="deleteRelationshipRoleWithUser" parameterType="list">
+    delete from t_user_role
+    where roleId in
+    <foreach collection="ids" item="id" separator="," open="(" close=")">
+      #{id,jdbcType=BIGINT}
+    </foreach>
+  </delete>
+
+  <delete id="deleteRelationshipRoleWithPrivilege" parameterType="list">
+    delete from t_role_menu
+    where roleId in
+    <foreach collection="ids" item="id" separator="," open="(" close=")">
+      #{id,jdbcType=BIGINT}
+    </foreach>
+  </delete>
+
+  <insert id="save" keyColumn="id" keyProperty="id" parameterType="com.jerry.base.authority.entity.Role">
+    insert into t_role (createTime, modifyTime, remark, `name`)
+    values (#{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateById" parameterType="com.jerry.base.authority.entity.Role">
+    update t_role
+    set createTime = #{createTime,jdbcType=TIMESTAMP},
+      modifyTime = #{modifyTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

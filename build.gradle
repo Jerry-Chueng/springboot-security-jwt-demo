@@ -1,0 +1,108 @@
+/**
+ * 打包命令 bootJar
+ * 清理 clean
+ */
+
+buildscript {
+    ext {
+        springBootVersion = '2.1.6.RELEASE'
+    }
+    //设置镜像源
+    repositories {
+        mavenLocal()
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
+    id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.jerry'
+//设置jar包名
+archivesBaseName = 'springboot-security-jwt-demo'
+//设置生成jar包版本
+version = '1.0.1'
+//代码jdk版本
+sourceCompatibility = 1.8
+//编译目标版本
+targetCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// java编译的时候缺省状态下会因为中文字符而失败
+[compileJava,compileTestJava,javadoc]*.options*.encoding = 'UTF-8'
+
+//configurations {
+//	compileOnly {
+//		extendsFrom annotationProcessor
+//	}
+//}
+
+repositories {
+    mavenLocal()
+    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.apache.commons:commons-lang3:3.8'
+    implementation 'com.alibaba:fastjson:1.2.60'
+    implementation 'com.alibaba:druid-spring-boot-starter:1.1.10'
+    implementation 'com.auth0:java-jwt:3.8.1'
+    implementation 'io.springfox:springfox-swagger2:2.9.2'
+    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+    //解决2.9.0之后NumberFormatException: For input string: ""，将自带的1.5.20替换
+    implementation 'io.swagger:swagger-annotations:1.5.22'
+    implementation 'io.swagger:swagger-models:1.5.22'
+    implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:1.2.12'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.2'
+
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    runtimeOnly 'mysql:mysql-connector-java'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+//// 清除现有的lib目录
+//task clearJar(type: Delete) {
+//	delete "$buildDir\\libs\\lib"
+//}
+//
+//// 将依赖包复制到lib目录
+//task copyJar(type: Copy, dependsOn: 'clearJar') {
+//	from configurations.compileClasspath
+//	into "$buildDir\\libs\\lib"
+//}
+//
+//bootJar {
+//
+//	baseName = 'security-jwt-demo'
+//	version = '1.0.0'
+//
+//	// 例外所有的jar
+//	excludes = ["*.jar"]
+//	// lib目录的清除和复制任务
+//	dependsOn clearJar
+//	dependsOn copyJar
+//
+//	// 指定依赖包的路径
+//	manifest {
+//		attributes "Manifest-Version": 1.0,
+//				'Class-Path': configurations.compileClasspath.files.collect { "lib/$it.name" }.join(' ')
+//	}
+//}
+

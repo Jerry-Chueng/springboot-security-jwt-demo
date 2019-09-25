@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jerry.base.authority.dao.UserMapper">
+    <resultMap id="UserResultMap" type="com.jerry.base.authority.entity.User">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="modifyTime" jdbcType="TIMESTAMP" property="modifyTime" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="tokenSalt" jdbcType="VARCHAR" property="tokenSalt" />
+        <result column="age" jdbcType="INTEGER" property="age" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <!--多对多映射关系-->
+        <collection property="roles" ofType="com.jerry.base.authority.entity.Role">
+            <result property="id" column="roleId"/>
+            <result property="name" column="roleName"/>
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+            id, createTime, modifyTime, remark, username, age
+            <!--, password, tokenSalt-->
+    </sql>
+
+    <sql id="Base_Column_List2">
+            u.*,r.id as roleId,r.name as roleName
+    </sql>
+
+    <select id="findAll" parameterType="com.jerry.base.authority.vo.QueryVO"
+            resultMap="UserResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_user
+        <where>
+            <if test="keyword != null and keyword != ''">
+                CONCAT_WS(',',username,remark)  LIKE concat('%',#{keyword},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="UserResultMap">
+        select
+        <include refid="Base_Column_List2" />
+        from t_user u
+        left join t_user_role ur on u.id = ur.userId
+        left join t_role r on r.id = ur.roleId
+        where u.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="findByUsername" parameterType="string" resultMap="UserResultMap">
+        select
+        <include refid="Base_Column_List2" />
+        from t_user u
+        left join t_user_role ur on u.id = ur.userId
+        left join t_role r on r.id = ur.roleId
+        where username = #{username,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteById" parameterType="list">
+        delete from t_user
+        where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+
+    <delete id="deleteRelationshipUserWithRole" parameterType="list">
+        delete from t_user_role
+        where userId in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+
+    <insert id="saveRelationshipWithRole" parameterType="com.alibaba.fastjson.JSONObject">
+        <foreach collection="obj.userIds" item="uid" separator=";">
+            insert into t_user_role(roleId, userId) values
+            <foreach collection="obj.roleIds" item="rid" separator=",">
+                (#{rid,jdbcType=BIGINT},#{uid,jdbcType=BIGINT})
+            </foreach>
+        </foreach>
+    </insert>
+
+    <insert id="save" keyColumn="id" keyProperty="id" parameterType="com.jerry.base.authority.entity.User">
+        insert into t_user (createTime, modifyTime, remark,
+                            username, password, tokenSalt,
+                            age)
+        values (#{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR},
+                #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{tokenSalt,jdbcType=VARCHAR},
+                #{age,jdbcType=INTEGER})
+    </insert>
+
+    <update id="updateUserPassword">
+        update t_user set password = #{newPwd,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateUserTokenSalt">
+        update t_user set tokenSalt = #{tokenSalt,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateById" parameterType="com.jerry.base.authority.entity.User">
+        update t_user
+        set modifyTime = #{modifyTime,jdbcType=TIMESTAMP},
+            remark = #{remark,jdbcType=VARCHAR},
+            age = #{age,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

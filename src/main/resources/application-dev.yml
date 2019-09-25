@@ -1,0 +1,13 @@
+logging:
+  level:
+    root: info
+    com:
+      jerry: debug
+
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://localhost:3306/demo
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: 1qaz2wsx
