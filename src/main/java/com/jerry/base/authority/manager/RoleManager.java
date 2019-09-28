@@ -5,7 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.jerry.base.authority.dao.RoleMapper;
 import com.jerry.base.authority.entity.Role;
 import com.jerry.base.common.entity.PageResult;
-import com.jerry.base.authority.vo.QueryVO;
+import com.jerry.base.authority.dto.QueryVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

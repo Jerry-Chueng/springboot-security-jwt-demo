@@ -1,5 +1,6 @@
 package com.jerry.base.security.configuration.json;
 
+import com.jerry.base.authority.entity.User;
 import com.jerry.base.common.entity.Response;
 import com.jerry.base.security.service.AuthUserDetail;
 import com.jerry.base.security.service.AuthUserDetailService;
@@ -32,7 +33,10 @@ public class JsonLoginSuccessHandler implements AuthenticationSuccessHandler {
 		response.setHeader("Authorization", token);
 		response.setContentType("application/json;charset=utf-8");
 		@Cleanup PrintWriter out = response.getWriter();
-		out.write(new Response().toString());
+		User user = authUserDetail.getUser();
+		user.setPassword("");
+		user.setTokenSalt("");
+		out.write(new Response(user).toString());
 	}
 
 }

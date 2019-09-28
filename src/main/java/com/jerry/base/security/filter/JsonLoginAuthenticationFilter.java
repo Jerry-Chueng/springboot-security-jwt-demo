@@ -34,7 +34,7 @@ public class JsonLoginAuthenticationFilter extends AbstractAuthenticationProcess
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-			throws AuthenticationException, IOException, ServletException {
+			throws AuthenticationException {
 		String username = request.getParameter("username"),
 				password = request.getParameter("password");
 		if(StringUtils.isEmpty(username)) {

@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.jerry.base.security.configuration.token.JwtAuthenticationToken;
 import com.jerry.base.security.service.AuthUserDetail;
 import com.jerry.base.security.service.AuthUserDetailService;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -36,7 +35,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 		String username = jwt.getSubject();
 		AuthUserDetail authUserDetail = (AuthUserDetail) userService.loadUserByUsername(username);
 		if(authUserDetail == null || authUserDetail.getPassword()==null){
-			throw new NonceExpiredException("token expires");
+			throw new BadCredentialsException("token invalid");
 		}
 		String tokenSalt = authUserDetail.getUser().getTokenSalt();
 		try {
@@ -46,11 +45,10 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
                     .build();
             verifier.verify(jwt.getToken());
         } catch (Exception e) {
-            throw new BadCredentialsException("token verify fail", e);
+            throw new BadCredentialsException("token invalid", e);
         }
 		//成功后返回认证信息，filter会将认证信息放入SecurityContext
-		JwtAuthenticationToken token = new JwtAuthenticationToken(authUserDetail, jwt, authUserDetail.getAuthorities());
-		return token;
+		return new JwtAuthenticationToken(authUserDetail, jwt, authUserDetail.getAuthorities());
 	}
 
 	@Override

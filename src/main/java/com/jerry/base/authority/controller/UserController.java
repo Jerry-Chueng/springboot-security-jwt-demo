@@ -6,7 +6,7 @@ import com.jerry.base.common.controller.BaseController;
 import com.jerry.base.common.entity.PageResult;
 import com.jerry.base.common.entity.Response;
 import com.jerry.base.authority.manager.UserManager;
-import com.jerry.base.authority.vo.QueryVO;
+import com.jerry.base.authority.dto.QueryVO;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ import java.util.List;
 @Api(tags = "用户操作")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/base/user")
+@RequestMapping("/auth/user")
 public class UserController extends BaseController {
 
     private final UserManager userManager;

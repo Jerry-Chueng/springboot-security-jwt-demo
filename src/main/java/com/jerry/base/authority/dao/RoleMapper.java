@@ -1,7 +1,7 @@
 package com.jerry.base.authority.dao;
 
 import com.jerry.base.authority.entity.Role;
-import com.jerry.base.authority.vo.QueryVO;
+import com.jerry.base.authority.dto.QueryVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.jerry.modules.test.vo;
 
-import com.jerry.base.authority.vo.QueryVO;
+import com.jerry.base.authority.dto.QueryVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

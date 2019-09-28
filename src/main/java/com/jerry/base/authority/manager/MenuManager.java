@@ -22,13 +22,13 @@ public class MenuManager {
 
     private final MenuMapper menuMapper;
 
-    public List<Menu> findAll(){
-        List<Menu> menuList = menuMapper.findAll();
-        List<Menu> menus = new ArrayList<>();
-        for (Menu menu : menuList) {
-            handleForEach(menu,menus);
-        }
-        return menus;
+    public List<Menu> getMenuList(List<Long> ids){
+        List<Menu> menuList = menuMapper.getMenuList(ids);
+//        List<Menu> menus = new ArrayList<>();
+//        for (Menu menu : menuList) {
+//            handleForEach(menu,menus);
+//        }
+        return menuList;
     }
 
     public void handleForEach(Menu menu,List<Menu> menus){

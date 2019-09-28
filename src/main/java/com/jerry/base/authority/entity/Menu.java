@@ -26,9 +26,10 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class Menu extends BaseEntity {
 
-    public Menu(long id, long parentId, String name, String path, int type, String icon, int order) {
+    public Menu(long id, long parentId, String name,String title, String path, int type, String icon, int order) {
         this.setId(id);
         this.parentId = parentId;
+        this.title = title;
         this.name = name;
         this.path = path;
         this.type = type;
@@ -39,11 +40,11 @@ public class Menu extends BaseEntity {
     @ApiModelProperty(value = "parentId")
     private long parentId;
 
-    /**
-     * name
-     */
     @ApiModelProperty(value = "name")
     private String name;
+
+    @ApiModelProperty(value = "title")
+    private String title;
 
     /**
      * path

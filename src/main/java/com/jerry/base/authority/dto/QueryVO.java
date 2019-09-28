@@ -1,4 +1,4 @@
-package com.jerry.base.authority.vo;
+package com.jerry.base.authority.dto;
 
 import lombok.*;
 

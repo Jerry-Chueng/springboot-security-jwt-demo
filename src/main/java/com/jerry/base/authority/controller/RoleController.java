@@ -5,7 +5,7 @@ import com.jerry.base.common.controller.BaseController;
 import com.jerry.base.common.entity.PageResult;
 import com.jerry.base.common.entity.Response;
 import com.jerry.base.authority.manager.RoleManager;
-import com.jerry.base.authority.vo.QueryVO;
+import com.jerry.base.authority.dto.QueryVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -25,7 +25,7 @@ import java.util.List;
 @Api(value = "角色操作",tags = "角色对象")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/base/role")
+@RequestMapping("/auth/role")
 public class RoleController extends BaseController {
 
     private final RoleManager roleManager;

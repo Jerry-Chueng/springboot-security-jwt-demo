@@ -5,6 +5,7 @@
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="parentId" jdbcType="BIGINT" property="parentId"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
         <result column="path" jdbcType="VARCHAR" property="path"/>
         <result column="type" jdbcType="INTEGER" property="type"/>
         <result column="icon" jdbcType="VARCHAR" property="icon"/>
@@ -18,7 +19,7 @@
         </collection>
     </resultMap>
     <sql id="Base_Column_List">
-        id,parentId, `name`, `path`, type, icon,`order`, createTime, modifyTime, remark
+        id,parentId, `name`,title `path`, type, icon,`order`, createTime, modifyTime, remark
     </sql>
 
     <sql id="Base_Column_List2">
@@ -48,11 +49,30 @@
         and p.id = rp.menuId and r.id = rp.roleId
     </select>
 
-    <select id="findAll" resultMap="BaseResultMap">
+    <select id="getMenuList" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List2"/>
+        from t_menu p
+        left join t_role_menu rp on p.id = rp.menuId
+        left join t_role r on  r.id = rp.roleId
+        <if test="ids != null and ids.size() != 0">
+            and r.id in
+            <foreach collection="ids" item="id" separator="," open="(" close=")">
+                #{id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        group by p.id
+        order by p.order
+    </select>
+
+    <select id="getMenuListWithoutSubList" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List2"/>
-        from t_menu p,t_role_menu rp,t_role r
-        where p.id = rp.menuId and r.id = rp.roleId
+        from t_menu p
+        left join t_role_menu rp on p.id = rp.menuId
+        left join t_role r on  r.id = rp.roleId
+        where p.path != '0'
+        group by p.id
         order by p.order
     </select>
 

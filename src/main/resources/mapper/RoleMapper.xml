@@ -27,7 +27,7 @@
     where name = #{name,jdbcType=VARCHAR}
   </select>
 
-  <select id="findAll" parameterType="com.jerry.base.authority.vo.QueryVO" resultMap="BaseResultMap">
+  <select id="findAll" parameterType="com.jerry.base.authority.dto.QueryVO" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from t_role

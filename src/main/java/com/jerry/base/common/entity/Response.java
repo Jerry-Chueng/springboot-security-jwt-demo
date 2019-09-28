@@ -2,9 +2,11 @@ package com.jerry.base.common.entity;
 
 
 import com.alibaba.fastjson.JSON;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class Response<T> {
 
     public static final int SUCCESS = 0;

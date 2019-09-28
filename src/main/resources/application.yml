@@ -11,6 +11,10 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
 
+#server:
+#  servlet:
+#    context-path: /base
+
 mybatis:
   configuration:
     call-setters-on-nulls: true

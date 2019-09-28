@@ -2,6 +2,7 @@ package com.jerry.base.security.service;
 
 import com.jerry.base.authority.dao.MenuMapper;
 import com.jerry.base.authority.entity.Menu;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -25,16 +26,16 @@ import java.util.stream.Collectors;
  */
 @Component
 @Order(0)
+@RequiredArgsConstructor
 public class PrivilegeService implements CommandLineRunner {
 
     private static Map<String, List<ConfigAttribute>> PRIVILEGE_META_SOURCE = new HashMap<>();
 
-    @Autowired
-    private MenuMapper privilegeMapper;
+    private final MenuMapper privilegeMapper;
 
     @Override
     public void run(String... args) throws Exception {
-        List<Menu> privilegeList = privilegeMapper.findAll();
+        List<Menu> privilegeList = privilegeMapper.getMenuListWithoutSubList();
         for (Menu privilege : privilegeList) {
             PRIVILEGE_META_SOURCE.put(privilege.getPath(),
                     privilege.getRoles().stream()

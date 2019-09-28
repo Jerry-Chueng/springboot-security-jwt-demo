@@ -99,9 +99,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         if (activeProfiles.equals("dev")) {
 //            web.ignoring().antMatchers("/**");
-            web.ignoring().antMatchers("/error", "/favicon.ico", "/static/**", "/**/*swagger*/**", "/csrf", "/v2/**","/");
+            web.ignoring().antMatchers("/error", "/favicon.ico", "/auth/menu/list",
+                    "/static/**", "/**/*swagger*/**", "/csrf", "/v2/**", "/");
         }else{
-            web.ignoring().antMatchers("/error", "/favicon.ico");
+            web.ignoring().antMatchers("/error", "/favicon.ico", "/auth/menu/list");
         }
 
     }
@@ -129,6 +130,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationProvider(authUserDetailService());
     }
 
+    /**
+     * 登录账号密码校验
+     * 如有需要可以继承DaoAuthenticationProvider，重写additionalAuthenticationChecks()，这里就是做密码比较的
+     * @throws Exception
+     */
     @Bean("daoAuthenticationProvider")
     protected AuthenticationProvider daoAuthenticationProvider() throws Exception {
         //这里会默认使用BCryptPasswordEncoder比对加密后的密码，注意要跟createUser时保持一致

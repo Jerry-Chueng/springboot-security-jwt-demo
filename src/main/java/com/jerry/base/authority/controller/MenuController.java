@@ -21,15 +21,15 @@ import java.util.List;
 @Api(value = "菜单操作", tags = "菜单对象")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/base/menu")
+@RequestMapping("/auth/menu")
 public class MenuController extends BaseController {
 
     private final MenuManager menuManager;
 
     @ApiOperation(value = "获取菜单List", notes = "获取菜单List")
-    @GetMapping("/list")
-    public Response list() {
-        List<Menu> list = menuManager.findAll();
+    @PostMapping("/list")
+    public Response list(@RequestBody(required = false) List<Long> ids) {
+        List<Menu> list = menuManager.getMenuList(ids);
         return new Response<>(list);
     }
 

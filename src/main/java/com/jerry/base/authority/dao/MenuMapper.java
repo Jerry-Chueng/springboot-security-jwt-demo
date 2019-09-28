@@ -33,5 +33,7 @@ public interface MenuMapper {
 
     Menu findByPath(String path);
 
-    List<Menu> findAll();
+    List<Menu> getMenuList(@Param("ids") List<Long> ids);
+
+    List<Menu> getMenuListWithoutSubList();
 }
