@@ -33,8 +33,15 @@ public class MenuController extends BaseController {
         return new Response<>(list);
     }
 
+    @ApiOperation(value = "根据ID获取菜单", notes = "根据ID获取菜单")
+    @GetMapping("/{id}")
+    public Response get(@PathVariable("id")Long id) {
+        Menu menu = menuManager.findById(id);
+        return new Response<>(menu);
+    }
+
     @ApiOperation(value = "保存菜单", notes = "保存菜单")
-    @PostMapping("/save")
+    @PostMapping
     public Response save(@RequestBody Menu menu) {
         Menu u = menuManager.findByName(menu.getName());
         if (u != null) {
@@ -44,7 +51,7 @@ public class MenuController extends BaseController {
     }
 
     @ApiOperation(value = "更新菜单", notes = "更新菜单")
-    @PutMapping("/update")
+    @PutMapping
     public Response update(@RequestBody Menu menu) {
         Menu u = menuManager.findByName(menu.getName());
         if (u != null) {
@@ -54,7 +61,7 @@ public class MenuController extends BaseController {
     }
 
     @ApiOperation(value = "删除菜单", notes = "支持删除多菜单")
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public Response delete(@RequestBody List<Long> ids) {
         return Response.ok(menuManager.delete(ids));
     }

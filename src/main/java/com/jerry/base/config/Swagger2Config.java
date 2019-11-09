@@ -31,17 +31,17 @@ import java.util.List;
 @Profile({"dev", "test"})// 设置 dev test 环境开启 prod 环境就关闭了
 public class Swagger2Config {
 
-    @Bean
-    public Docket pubDocument() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("pub")
-                .select()
-                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
-                .paths(PathSelectors.regex("/test.*"))
-                .build()
-                .pathMapping("/")
-                .apiInfo(apiInfo());
-    }
+//    @Bean
+//    public Docket pubDocument() {
+//        return new Docket(DocumentationType.SWAGGER_2)
+//                .groupName("pub")
+//                .select()
+//                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
+//                .paths(PathSelectors.regex("/test.*"))
+//                .build()
+//                .pathMapping("/")
+//                .apiInfo(apiInfo());
+//    }
 
     @Bean
     public Docket apiDocument() {
@@ -49,7 +49,7 @@ public class Swagger2Config {
                 .groupName("base")
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
-                .paths(PathSelectors.regex("/base.*"))
+//                .paths(PathSelectors.regex("/base.*"))
                 .build()
                 .pathMapping("/")
                 .globalOperationParameters(setHeaderToken())

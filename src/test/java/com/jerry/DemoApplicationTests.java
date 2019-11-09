@@ -41,18 +41,18 @@ public class DemoApplicationTests {
 	public void contextLoad(){
 
 		TestVO testVO = new TestVO();
-		int pageNum = 2;
+		int currentPage = 2;
 		int pageSize = 20;
-		testVO.setPageNum(pageNum);
+		testVO.setCurrentPage(currentPage);
 		testVO.setPageSize(pageSize);
 		//利用分页工具开始分页
-		PageInfo<Map> pageInfo = PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(()->testMapper.listTest(testVO));
-		Page<Map> page = PageHelper.startPage(pageNum, pageSize).doSelectPage(()-> testMapper.listTest(testVO));
+		PageInfo<Map> pageInfo = PageHelper.startPage(currentPage, pageSize).doSelectPageInfo(()->testMapper.listTest(testVO));
+		Page<Map> page = PageHelper.startPage(currentPage, pageSize).doSelectPage(()-> testMapper.listTest(testVO));
 //		List<Map> list = testMapper.listTest(testVO);
 //		PageInfo<Map> pageInfo = new PageInfo<>(list);
 		//创建分页对象
-		PageResult pageResult = new PageResult(pageInfo.getTotal(), pageInfo.getList(), pageNum, pageSize);
-		PageResult pageResult2 = new PageResult(page.getTotal(), page.getResult(), pageNum, pageSize);
+		PageResult pageResult = new PageResult(pageInfo.getTotal(), pageInfo.getList(), currentPage, pageSize);
+		PageResult pageResult2 = new PageResult(page.getTotal(), page.getResult(), currentPage, pageSize);
 		log.info(JSON.toJSONString(pageResult));
 		log.info(JSON.toJSONString(pageResult2));
 

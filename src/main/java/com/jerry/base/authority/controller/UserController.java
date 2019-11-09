@@ -31,18 +31,25 @@ public class UserController extends BaseController {
     @ApiOperation(value = "获取用户List",notes = "获取用户List")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "keyword",value = "keyword",required = false,paramType = "query",dataType = "String"),
-        @ApiImplicitParam(name = "pageNum",value = "pageNum",required = true,paramType = "query",dataType = "Long"),
-        @ApiImplicitParam(name = "pageSize",value = "pageSize",required = true,paramType = "query",dataType = "Long")
+        @ApiImplicitParam(name = "currentPage",value = "currentPage",required = true,defaultValue = "1",paramType = "query",dataType = "Long"),
+        @ApiImplicitParam(name = "pageSize",value = "pageSize",required = true,defaultValue = "20",paramType = "query",dataType = "Long")
     })
-    @GetMapping("/list")
-    public Response list(String keyword,Integer pageNum,Integer pageSize){
-        QueryVO vo = new QueryVO(keyword, pageNum, pageSize);
+    @GetMapping
+    public Response list(String keyword,Integer currentPage,Integer pageSize){
+        QueryVO vo = new QueryVO(keyword, currentPage, pageSize);
         PageResult pageResult = userManager.findAll(vo);
         return new Response<>(pageResult);
     }
 
+    @ApiOperation(value = "根据ID获取用户",notes = "根据ID获取用户")
+    @GetMapping("/{id}")
+    public Response get(@PathVariable("id")Long id){
+        User user = userManager.findById(id);
+        return new Response<>(user);
+    }
+
     @ApiOperation(value = "保存用户",notes = "保存用户")
-    @PostMapping("/save")
+    @PostMapping
     public Response save(@RequestBody User user) {
         User u = userManager.findByUsername(user.getUsername());
         if (u != null) {
@@ -52,13 +59,13 @@ public class UserController extends BaseController {
     }
 
     @ApiOperation(value = "更新用户",notes = "更新用户,用户名不允许修改")
-    @PutMapping("/update")
+    @PutMapping
     public Response update(@RequestBody User user) {
         return Response.ok(userManager.update(user));
     }
 
     @ApiOperation(value = "删除用户",notes = "支持删除多用户")
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public Response delete(@RequestBody List<Long> ids) {
         return Response.ok(userManager.delete(ids));
     }

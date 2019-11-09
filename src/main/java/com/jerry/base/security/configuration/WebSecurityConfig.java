@@ -99,7 +99,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         if (activeProfiles.equals("dev")) {
 //            web.ignoring().antMatchers("/**");
-            web.ignoring().antMatchers("/error", "/favicon.ico", "/auth/menu/list",
+            web.ignoring().antMatchers("/error", "/favicon.ico",
                     "/static/**", "/**/*swagger*/**", "/csrf", "/v2/**", "/");
         }else{
             web.ignoring().antMatchers("/error", "/favicon.ico", "/auth/menu/list");

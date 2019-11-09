@@ -17,7 +17,7 @@ public class QueryVO {
 
     private String keyword;
 
-    private int pageNum;
+    private int currentPage;
 
     private int pageSize;
 }

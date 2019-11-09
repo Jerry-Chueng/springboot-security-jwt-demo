@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jerry.base.authority.dao.UserMapper;
 import com.jerry.base.authority.entity.User;
+import com.jerry.base.common.entity.BaseEntity;
 import com.jerry.base.common.entity.PageResult;
 import com.jerry.base.common.entity.Response;
 import com.jerry.base.authority.dto.QueryVO;
@@ -13,8 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by on 2019-08-18 14:22
@@ -30,8 +34,8 @@ public class UserManager {
     private final UserMapper userMapper;
 
     public PageResult findAll(QueryVO vo){
-        PageInfo<User> pageInfo = PageHelper.startPage(vo.getPageNum(), vo.getPageSize()).doSelectPageInfo(()->userMapper.findAll(vo));
-        return new PageResult(pageInfo.getTotal(), pageInfo.getList(), vo.getPageNum(), vo.getPageSize());
+        PageInfo<User> pageInfo = PageHelper.startPage(vo.getCurrentPage(), vo.getPageSize()).doSelectPageInfo(()->userMapper.findAll(vo));
+        return new PageResult(pageInfo.getTotal(), pageInfo.getList(), vo.getCurrentPage(), vo.getPageSize());
     }
 
     public User findById(Long id){
@@ -42,27 +46,32 @@ public class UserManager {
         return userMapper.findByUsername(username);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void saveRelationshipWithRole(JSONObject obj){
         List<Long> list = obj.getJSONArray("userIds").toJavaList(Long.class);
         userMapper.deleteRelationshipUserWithRole(list);
-        userMapper.saveRelationshipWithRole(obj);
+        if (obj.getJSONArray("roleIds").size() > 0) {
+            userMapper.saveRelationshipWithRole(obj);
+        }
     }
 
-    public int save(User user){
-        //密码加密
+    @Transactional(rollbackFor = Exception.class)
+    public long save(User user){
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
-        return userMapper.save(user);
+        userMapper.save(user);
+        handleSaveRelationshipWithRole(user,user.getId());
+        return user.getId();
     }
 
-    public int update(User user){
-        user.setModifyTime(new Date());
-        return userMapper.updateById(user);
+    public long update(User user){
+        int count = userMapper.updateById(user);
+        handleSaveRelationshipWithRole(user,user.getId());
+        return count;
     }
 
-    public int updateUserTokenSalt(Long id,String tokenSalt){
-        return userMapper.updateUserTokenSalt(id,tokenSalt);
+    public void updateUserTokenSalt(Long id,String tokenSalt){
+        userMapper.updateUserTokenSalt(id,tokenSalt);
     }
 
     public Response updateUserPassword(Long id, String oldPwd, String newPwd) {
@@ -76,9 +85,16 @@ public class UserManager {
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int delete(List<Long> ids) {
         userMapper.deleteRelationshipUserWithRole(ids);
         return userMapper.deleteById(ids);
+    }
+
+    private void handleSaveRelationshipWithRole(User user,long id){
+        JSONObject obj = new JSONObject();
+        obj.put("userIds", Collections.singletonList(id));
+        obj.put("roleIds", user.getRoles().stream().map(BaseEntity::getId).collect(Collectors.toList()));
+        saveRelationshipWithRole(obj);
     }
 }

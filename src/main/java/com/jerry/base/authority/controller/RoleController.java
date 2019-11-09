@@ -33,18 +33,25 @@ public class RoleController extends BaseController {
     @ApiOperation(value = "获取角色List",notes = "获取角色List")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "keyword",value = "keyword",required = false,paramType = "query",dataType = "String"),
-            @ApiImplicitParam(name = "pageNum",value = "pageNum",required = true,paramType = "query",dataType = "Long"),
-            @ApiImplicitParam(name = "pageSize",value = "pageSize",required = true,paramType = "query",dataType = "Long")
+            @ApiImplicitParam(name = "currentPage",value = "currentPage",required = true,defaultValue = "1",paramType = "query",dataType = "Long"),
+            @ApiImplicitParam(name = "pageSize",value = "pageSize",required = true,defaultValue = "20",paramType = "query",dataType = "Long")
     })
-    @GetMapping("/list")
-    public Response list(String keyword,Integer pageNum,Integer pageSize){
-        QueryVO vo = new QueryVO(keyword, pageNum, pageSize);
+    @GetMapping
+    public Response list(String keyword,Integer currentPage,Integer pageSize){
+        QueryVO vo = new QueryVO(keyword, currentPage, pageSize);
         PageResult pageResult = roleManager.findAll(vo);
         return new Response<>(pageResult);
     }
 
+    @ApiOperation(value = "根据ID获取角色",notes = "根据ID获取角色")
+    @GetMapping("/{id}")
+    public Response get(@PathVariable("id")Long id){
+        Role role = roleManager.findById(id);
+        return new Response<>(role);
+    }
+
     @ApiOperation(value = "保存角色",notes = "保存角色")
-    @PostMapping("/save")
+    @PostMapping
     public Response save(@RequestBody Role role) {
         Role r = roleManager.findByName(role.getName());
         if (r != null) {
@@ -54,7 +61,7 @@ public class RoleController extends BaseController {
     }
 
     @ApiOperation(value = "更新角色",notes = "更新角色")
-    @PutMapping("/update")
+    @PutMapping
     public Response update(@RequestBody Role role) {
         Role r = roleManager.findByName(role.getName());
         if (r != null && r.getId() != role.getId()) {
@@ -64,7 +71,7 @@ public class RoleController extends BaseController {
     }
 
     @ApiOperation(value = "删除角色",notes = "支持删除多角色")
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public Response delete(@RequestBody List<Long> ids) {
         return Response.ok(roleManager.delete(ids));
     }

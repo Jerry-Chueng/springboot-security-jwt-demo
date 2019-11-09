@@ -26,12 +26,13 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class Menu extends BaseEntity {
 
-    public Menu(long id, long parentId, String name,String title, String path, int type, String icon, int order) {
+    public Menu(long id, long parentId, String name,String title, String path,String component, int type, String icon, int order) {
         this.setId(id);
         this.parentId = parentId;
         this.title = title;
         this.name = name;
         this.path = path;
+        this.component = component;
         this.type = type;
         this.icon = icon;
         this.order = order;
@@ -63,6 +64,9 @@ public class Menu extends BaseEntity {
 
     @ApiModelProperty(value = "order")
     private int order;
+
+    @ApiModelProperty
+    private String component;
 
     private Set<Role> roles;
 

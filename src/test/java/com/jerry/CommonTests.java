@@ -167,35 +167,35 @@ public class CommonTests {
 		executor.shutdown();
 	}
 
-	@Test
-	public void test6() {
-		MenuManager menuManager = new MenuManager(null);
-		List<Menu> menuList = new ArrayList<>();
-		Menu menu1 = new Menu(1L, 0L, "menu1","menu1", "/menu1", 1, "icon1", 1);
-		menuList.add(menu1);
-
-		Menu menu2 = new Menu(2L, 0L, "menu2","menu2", "/menu2", 1, "icon2", 1);
-		menuList.add(menu2);
-
-		Menu menu3 = new Menu(3L, 1L, "menu3","menu3", "/menu3", 1, "icon1", 1);
-		menuList.add(menu3);
-
-		Menu menu4 = new Menu(4L, 2L, "menu4","menu4", "/menu4", 1, "icon1", 1);
-		menuList.add(menu4);
-
-		Menu menu5 = new Menu(5L, 1L, "menu5","menu5", "/menu5", 1, "icon1", 1);
-		menuList.add(menu5);
-
-		Menu menu6 = new Menu(6L, 3L, "menu6","menu6", "/menu6", 2, "icon1", 1);
-		menuList.add(menu6);
-
-		Menu menu7 = new Menu(7L, 3L, "menu7","menu7", "/menu7", 2, "icon1", 1);
-		menuList.add(menu7);
-
-		List<Menu> menus = new ArrayList<>();
-		for (Menu menu : menuList) {
-			menuManager.handleForEach(menu,menus);
-		}
-		System.out.println(JSON.toJSONStringWithDateFormat(menus,Constant.DATE_FORMAT, SerializerFeature.WriteMapNullValue));
-	}
+//	@Test
+//	public void test6() {
+//		MenuManager menuManager = new MenuManager(null);
+//		List<Menu> menuList = new ArrayList<>();
+//		Menu menu1 = new Menu(1L, 0L, "menu1","menu1", "/menu1", 1, "icon1", 1);
+//		menuList.add(menu1);
+//
+//		Menu menu2 = new Menu(2L, 0L, "menu2","menu2", "/menu2", 1, "icon2", 1);
+//		menuList.add(menu2);
+//
+//		Menu menu3 = new Menu(3L, 1L, "menu3","menu3", "/menu3", 1, "icon1", 1);
+//		menuList.add(menu3);
+//
+//		Menu menu4 = new Menu(4L, 2L, "menu4","menu4", "/menu4", 1, "icon1", 1);
+//		menuList.add(menu4);
+//
+//		Menu menu5 = new Menu(5L, 1L, "menu5","menu5", "/menu5", 1, "icon1", 1);
+//		menuList.add(menu5);
+//
+//		Menu menu6 = new Menu(6L, 3L, "menu6","menu6", "/menu6", 2, "icon1", 1);
+//		menuList.add(menu6);
+//
+//		Menu menu7 = new Menu(7L, 3L, "menu7","menu7", "/menu7", 2, "icon1", 1);
+//		menuList.add(menu7);
+//
+//		List<Menu> menus = new ArrayList<>();
+//		for (Menu menu : menuList) {
+//			menuManager.handleForEach(menu,menus);
+//		}
+//		System.out.println(JSON.toJSONStringWithDateFormat(menus,Constant.DATE_FORMAT, SerializerFeature.WriteMapNullValue));
+//	}
 }

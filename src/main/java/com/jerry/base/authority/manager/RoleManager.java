@@ -27,8 +27,8 @@ public class RoleManager {
     private final RoleMapper roleMapper;
 
     public PageResult findAll(QueryVO vo){
-        PageInfo<Role> pageInfo = PageHelper.startPage(vo.getPageNum(), vo.getPageSize()).doSelectPageInfo(()->roleMapper.findAll(vo));
-        return new PageResult(pageInfo.getTotal(), pageInfo.getList(), vo.getPageNum(), vo.getPageSize());
+        PageInfo<Role> pageInfo = PageHelper.startPage(vo.getCurrentPage(), vo.getPageSize()).doSelectPageInfo(()->roleMapper.findAll(vo));
+        return new PageResult(pageInfo.getTotal(), pageInfo.getList(), vo.getCurrentPage(), vo.getPageSize());
     }
 
     public Role findById(Long id){

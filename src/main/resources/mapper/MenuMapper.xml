@@ -7,6 +7,7 @@
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
         <result column="path" jdbcType="VARCHAR" property="path"/>
+        <result column="component" jdbcType="VARCHAR" property="component"/>
         <result column="type" jdbcType="INTEGER" property="type"/>
         <result column="icon" jdbcType="VARCHAR" property="icon"/>
         <result column="order" jdbcType="INTEGER" property="order"/>
@@ -19,7 +20,7 @@
         </collection>
     </resultMap>
     <sql id="Base_Column_List">
-        id,parentId, `name`,title `path`, type, icon,`order`, createTime, modifyTime, remark
+        id,parentId, `name`,title `path`,component, type, icon,`order`, createTime, modifyTime, remark
     </sql>
 
     <sql id="Base_Column_List2">

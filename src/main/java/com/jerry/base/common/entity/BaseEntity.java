@@ -27,14 +27,14 @@ public class BaseEntity {
      */
     @ApiModelProperty(value = "createTime",example = "2019-9-17 16:00:00")
     @JsonFormat(pattern = Constant.DATE_FORMAT)
-    private Date createTime = new Date();
+    private Date createTime;
 
     /**
      * modifyTime
      */
     @ApiModelProperty(value = "modifyTime",example = "2019-9-17 16:00:00")
     @JsonFormat(pattern = Constant.DATE_FORMAT)
-    private Date modifyTime = new Date();
+    private Date modifyTime;
 
     /**
      * remark

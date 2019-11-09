@@ -29,13 +29,16 @@
     <select id="findAll" parameterType="com.jerry.base.authority.dto.QueryVO"
             resultMap="UserResultMap">
         select
-        <include refid="Base_Column_List" />
-        from t_user
+        <include refid="Base_Column_List2" />
+        from t_user u
+        left join t_user_role ur on u.id = ur.userId
+        left join t_role r on r.id = ur.roleId
         <where>
             <if test="keyword != null and keyword != ''">
-                CONCAT_WS(',',username,remark)  LIKE concat('%',#{keyword},'%')
+                CONCAT_WS(',',u.username,u.remark)  LIKE concat('%',#{keyword},'%')
             </if>
         </where>
+        order by u.createTime desc
     </select>
 
     <select id="findById" parameterType="java.lang.Long" resultMap="UserResultMap">
@@ -81,11 +84,13 @@
         </foreach>
     </insert>
 
-    <insert id="save" keyColumn="id" keyProperty="id" parameterType="com.jerry.base.authority.entity.User">
+    <insert id="save" parameterType="com.jerry.base.authority.entity.User">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         insert into t_user (createTime, modifyTime, remark,
-                            username, password, tokenSalt,
-                            age)
-        values (#{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR},
+                            username, password, tokenSalt,age)
+        values (now(), now(), #{remark,jdbcType=VARCHAR},
                 #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{tokenSalt,jdbcType=VARCHAR},
                 #{age,jdbcType=INTEGER})
     </insert>
@@ -102,7 +107,7 @@
 
     <update id="updateById" parameterType="com.jerry.base.authority.entity.User">
         update t_user
-        set modifyTime = #{modifyTime,jdbcType=TIMESTAMP},
+        set modifyTime = now(),
             remark = #{remark,jdbcType=VARCHAR},
             age = #{age,jdbcType=INTEGER}
         where id = #{id,jdbcType=BIGINT}
