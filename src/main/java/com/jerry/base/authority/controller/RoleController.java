@@ -30,7 +30,7 @@ public class RoleController extends BaseController {
 
     private final RoleManager roleManager;
 
-    @ApiOperation(value = "获取角色List",notes = "获取角色List")
+    @ApiOperation(value = "获取角色",notes = "获取角色")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "keyword",value = "keyword",required = false,paramType = "query",dataType = "String"),
             @ApiImplicitParam(name = "currentPage",value = "currentPage",required = true,defaultValue = "1",paramType = "query",dataType = "Long"),
@@ -43,12 +43,12 @@ public class RoleController extends BaseController {
         return new Response<>(pageResult);
     }
 
-    @ApiOperation(value = "根据ID获取角色",notes = "根据ID获取角色")
-    @GetMapping("/{id}")
-    public Response get(@PathVariable("id")Long id){
-        Role role = roleManager.findById(id);
-        return new Response<>(role);
-    }
+//    @ApiOperation(value = "根据ID获取角色",notes = "根据ID获取角色")
+//    @GetMapping("/{id}")
+//    public Response get(@PathVariable("id")Long id){
+//        Role role = roleManager.findById(id);
+//        return new Response<>(role);
+//    }
 
     @ApiOperation(value = "保存角色",notes = "保存角色")
     @PostMapping

@@ -16,7 +16,7 @@ public class BaseController {
 
     @ExceptionHandler
     public Response handleException(Exception ex){
-        log.error("{}",ex);
+        log.error("操作错误",ex);
         return Response.fail("操作错误", ex.getMessage());
     }
 }

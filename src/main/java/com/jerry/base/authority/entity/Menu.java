@@ -26,47 +26,32 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class Menu extends BaseEntity {
 
-    public Menu(long id, long parentId, String name,String title, String path,String component, int type, String icon, int order) {
-        this.setId(id);
-        this.parentId = parentId;
-        this.title = title;
-        this.name = name;
-        this.path = path;
-        this.component = component;
-        this.type = type;
-        this.icon = icon;
-        this.order = order;
-    }
-
     @ApiModelProperty(value = "parentId")
     private long parentId;
 
-    @ApiModelProperty(value = "name")
+    @ApiModelProperty(value = "名称")
     private String name;
 
-    @ApiModelProperty(value = "title")
+    @ApiModelProperty(value = "标题")
     private String title;
 
-    /**
-     * path
-     */
-    @ApiModelProperty(value = "path")
+    @ApiModelProperty(value = "路径")
     private String path;
 
-    /**
-     * 约定 1:菜单，2:按钮
-     */
-    @ApiModelProperty(value = "type")
+    @ApiModelProperty(value = "前端组件路径")
+    private String component;
+
+    @ApiModelProperty(value = "类型",notes = "约定 0:目录，1:菜单，2:按钮")
     private int type;
 
-    @ApiModelProperty(value = "icon")
+    @ApiModelProperty(value = "图标")
     private String icon;
 
-    @ApiModelProperty(value = "order")
+    @ApiModelProperty(value = "排序")
     private int order;
 
-    @ApiModelProperty
-    private String component;
+    @ApiModelProperty(value = "权限标识")
+    private String permission;
 
     private Set<Role> roles;
 

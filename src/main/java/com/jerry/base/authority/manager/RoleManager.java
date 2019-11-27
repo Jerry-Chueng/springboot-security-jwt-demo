@@ -44,11 +44,10 @@ public class RoleManager {
     }
 
     public int update(Role role){
-        role.setModifyTime(new Date());
-        return roleMapper.updateById(role);
+        return roleMapper.update(role);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int delete(List<Long> ids){
         roleMapper.deleteRelationshipRoleWithPrivilege(ids);
         roleMapper.deleteRelationshipRoleWithUser(ids);

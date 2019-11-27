@@ -25,7 +25,7 @@ public interface UserMapper {
 
     int updateUserPassword(@Param("id") Long id, @Param("newPwd") String newPwd);
 
-    int updateById(User record);
+    int update(User record);
 
     int updateUserTokenSalt(@Param("id") Long id, @Param("tokenSalt") String tokenSalt);
 

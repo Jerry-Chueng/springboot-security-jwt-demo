@@ -23,7 +23,7 @@ public interface RoleMapper {
 
     int save(Role record);
 
-    int updateById(Role record);
+    int update(Role record);
 
     Role findById(Long id);
 

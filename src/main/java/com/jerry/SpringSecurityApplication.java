@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan({"com.jerry.base.authority.dao","com.jerry.modules.**.dao"})
+@MapperScan({"com.jerry.base.**.dao","com.jerry.modules.**.dao"})
 public class SpringSecurityApplication {
 
 	public static void main(String[] args) {

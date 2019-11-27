@@ -7,10 +7,11 @@
     <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
     <result column="modifyTime" jdbcType="TIMESTAMP" property="modifyTime" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="hide" jdbcType="BOOLEAN" property="isHide" />
   </resultMap>
 
   <sql id="Base_Column_List">
-    id,`name`, createTime, modifyTime, remark
+    id,`name`, createTime, modifyTime, remark,hide
   </sql>
 
   <select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -64,14 +65,12 @@
 
   <insert id="save" keyColumn="id" keyProperty="id" parameterType="com.jerry.base.authority.entity.Role">
     insert into t_role (createTime, modifyTime, remark, `name`)
-    values (#{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR},
-      #{name,jdbcType=VARCHAR})
+    values (now(),now(), #{remark,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR})
   </insert>
 
-  <update id="updateById" parameterType="com.jerry.base.authority.entity.Role">
-    update t_role
-    set createTime = #{createTime,jdbcType=TIMESTAMP},
-      modifyTime = #{modifyTime,jdbcType=TIMESTAMP},
+  <update id="update" parameterType="com.jerry.base.authority.entity.Role">
+    update t_role set
+      modifyTime = now(),
       remark = #{remark,jdbcType=VARCHAR},
       `name` = #{name,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

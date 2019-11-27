@@ -8,19 +8,21 @@
         <result column="title" jdbcType="VARCHAR" property="title"/>
         <result column="path" jdbcType="VARCHAR" property="path"/>
         <result column="component" jdbcType="VARCHAR" property="component"/>
+        <result column="permission" jdbcType="VARCHAR" property="permission"/>
         <result column="type" jdbcType="INTEGER" property="type"/>
         <result column="icon" jdbcType="VARCHAR" property="icon"/>
         <result column="order" jdbcType="INTEGER" property="order"/>
         <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="modifyTime" jdbcType="TIMESTAMP" property="modifyTime"/>
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="hide" jdbcType="BOOLEAN" property="isHide" />
         <collection property="roles" ofType="com.jerry.base.authority.entity.Role">
             <result property="id" column="roleId"/>
             <result property="name" column="roleName"/>
         </collection>
     </resultMap>
     <sql id="Base_Column_List">
-        id,parentId, `name`,title `path`,component, type, icon,`order`, createTime, modifyTime, remark
+        id,parentId, `name`,title `path`,component,permission, type, icon,`order`, createTime, modifyTime, remark,hide
     </sql>
 
     <sql id="Base_Column_List2">
@@ -50,18 +52,23 @@
         and p.id = rp.menuId and r.id = rp.roleId
     </select>
 
-    <select id="getMenuList" resultMap="BaseResultMap">
+    <select id="list" resultMap="BaseResultMap">
         select
             <include refid="Base_Column_List2"/>
         from t_menu p
         left join t_role_menu rp on p.id = rp.menuId
         left join t_role r on  r.id = rp.roleId
-        <if test="ids != null and ids.size() != 0">
-            and r.id in
-            <foreach collection="ids" item="id" separator="," open="(" close=")">
-                #{id,jdbcType=BIGINT}
-            </foreach>
-        </if>
+        <where>
+            <if test="ids != null and ids.size() != 0">
+                rp.roleId in
+                <foreach collection="ids" item="id" separator="," open="(" close=")">
+                    #{id,jdbcType=BIGINT}
+                </foreach>
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and CONCAT_WS(',',`name`,title,path,component,remark)  LIKE concat('%',#{keyword},'%')
+            </if>
+        </where>
         group by p.id
         order by p.order
     </select>
@@ -93,50 +100,36 @@
         </foreach>
     </delete>
 
-    <delete id="deleteRoleRelationship" parameterType="int">
-        delete from t_role_menu
-        where menuId = #{param1} and roleId = #{param2}
+    <delete id="deleteRoleRelationship" parameterType="long">
+        delete from t_role_menu where roleId = #{param2}
     </delete>
 
     <insert id="save" keyColumn="id" keyProperty="id" parameterType="com.jerry.base.authority.entity.Menu">
-        insert into t_menu (createTime, modifyTime, `name`,
-          `path`, remark)
-        values (#{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{name,jdbcType=VARCHAR},
-          #{path,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+        insert into t_menu (parentId,createTime, modifyTime, `name`,title,`path`,component, type, icon,`order`, remark)
+        values (#{parentId} ,now(), now(), #{name,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{path,jdbcType=VARCHAR},
+            #{component,jdbcType=VARCHAR},#{type},#{icon,jdbcType=VARCHAR},#{order}, #{remark,jdbcType=VARCHAR})
     </insert>
 
-    <insert id="saveRelationshipWithRole" parameterType="int">
-        insert into t_role_menu (menuId,roleId) values (#{param1} ,#{param2})
+    <insert id="saveRelationshipWithRole">
+        insert into t_role_menu (menuId,roleId) values
+        <foreach collection="menuIds" item="id" separator=",">
+            (#{id},#{roleId})
+        </foreach>
     </insert>
 
-    <update id="updateByIdSelective" parameterType="com.jerry.base.authority.entity.Menu">
+    <update id="update" parameterType="com.jerry.base.authority.entity.Menu">
         update t_menu
-        <set>
-            <if test="createTime != null">
-                createTime = #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="modifyTime != null">
-                modifyTime = #{modifyTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="name != null">
-                `name` = #{name,jdbcType=VARCHAR},
-            </if>
-            <if test="path != null">
-                `path` = #{path,jdbcType=VARCHAR},
-            </if>
-            <if test="remark != null">
-                remark = #{remark,jdbcType=VARCHAR},
-            </if>
-        </set>
+        set
+            modifyTime = now(),
+            parentId = #{parentId},
+            `name` = #{name,jdbcType=VARCHAR} ,
+            title = #{title,jdbcType=VARCHAR} ,
+            `path` = #{path,jdbcType=VARCHAR},
+            component = #{component,jdbcType=VARCHAR},
+            type = #{type},
+            `order` = #{order},
+            icon = #{icon,jdbcType=VARCHAR},
+            remark = #{remark,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
-    </update>
-    <update id="updateById" parameterType="com.jerry.base.authority.entity.Menu">
-    update t_menu
-    set createTime = #{createTime,jdbcType=TIMESTAMP},
-      modifyTime = #{modifyTime,jdbcType=TIMESTAMP},
-      `name` = #{name,jdbcType=VARCHAR},
-      `path` = #{path,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

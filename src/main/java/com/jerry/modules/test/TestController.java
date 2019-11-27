@@ -2,10 +2,10 @@ package com.jerry.modules.test;
 
 import com.jerry.modules.test.vo.TestVO;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -23,8 +23,8 @@ public class TestController {
 	 */
 	@ApiOperation(value = "测试",notes = "GetMapping测试接口id")
 	@GetMapping("/menu/{id}")
+	@PreAuthorize("hasPermission('test','test1')")
 	public HashMap menu(@PathVariable Long id) {
-		log.info("menuid:"+id);
 		return new HashMap<String,String>(){{put("test","GetMapping id");}};
 	}
 
@@ -33,7 +33,8 @@ public class TestController {
 	 * @return
 	 */
 	@ApiOperation(value = "测试",notes = "GetMapping测试接口")
-	@GetMapping("/menu")
+	@GetMapping("/menu1")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public HashMap menu1() {
 		return new HashMap<String,String>(){{put("test","GetMapping");}};
 	}

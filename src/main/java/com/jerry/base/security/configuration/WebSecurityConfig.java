@@ -1,5 +1,6 @@
 package com.jerry.base.security.configuration;
 
+import com.jerry.base.authority.manager.MenuManager;
 import com.jerry.base.authority.manager.UserManager;
 import com.jerry.base.security.configuration.json.JsonLoginConfigurer;
 import com.jerry.base.security.configuration.json.JsonLoginSuccessHandler;
@@ -17,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -36,6 +38,7 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.Arrays;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${spring.profiles.active}")
@@ -45,7 +48,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserManager userManager;
 
     @Autowired
-    private PrivilegeInvocationSecurityMetadataSourceService privilegeInvocationSecurityMetadataSourceService;
+    private MenuManager menuManager;
+
+    @Autowired
+    private PrivilegeMetadataSource privilegeMetadataSource;
 
     @Autowired
     private PrivilegeAccessDecisionManager privilegeAccessDecisionManager;
@@ -57,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                     @Override
                     public <O extends FilterSecurityInterceptor> O postProcess(O object) {
-                        object.setSecurityMetadataSource(privilegeInvocationSecurityMetadataSourceService);
+                        object.setSecurityMetadataSource(privilegeMetadataSource);
                         object.setAccessDecisionManager(privilegeAccessDecisionManager);
                         return object;
                     }
@@ -146,12 +152,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected UserDetailsService userDetailsService() {
-        return new AuthUserDetailService(userManager);
+        return new AuthUserDetailService(userManager,menuManager);
     }
 
     @Bean("authUserDetailService")
     protected AuthUserDetailService authUserDetailService() {
-        return new AuthUserDetailService(userManager);
+        return new AuthUserDetailService(userManager,menuManager);
     }
 
     /**

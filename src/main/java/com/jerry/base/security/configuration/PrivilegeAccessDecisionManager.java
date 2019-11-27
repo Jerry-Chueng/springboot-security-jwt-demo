@@ -30,17 +30,12 @@ public class PrivilegeAccessDecisionManager implements AccessDecisionManager {
             throw new AccessDeniedException("无权限访问");
         }
 
-        AuthUserDetail authUserDetail = (AuthUserDetail) authentication.getPrincipal();
-        if (authUserDetail.getUsername().equals("jerry")) {
-            return;
-        }
-
         for (ConfigAttribute configAttribute : configAttributes) {
-            String roleName = configAttribute.getAttribute();
+            String permit = configAttribute.getAttribute();
 
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
             for (GrantedAuthority authority : authorities) {
-                if (authority.getAuthority().equals(roleName)) {
+                if (authority.getAuthority().equals(permit)) {
                     return;
                 }
             }

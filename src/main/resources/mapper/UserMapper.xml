@@ -10,6 +10,7 @@
         <result column="tokenSalt" jdbcType="VARCHAR" property="tokenSalt" />
         <result column="age" jdbcType="INTEGER" property="age" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="hide" jdbcType="BOOLEAN" property="isHide" />
         <!--多对多映射关系-->
         <collection property="roles" ofType="com.jerry.base.authority.entity.Role">
             <result property="id" column="roleId"/>
@@ -18,7 +19,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-            id, createTime, modifyTime, remark, username, age
+            id, createTime, modifyTime, remark, username, age,hide
             <!--, password, tokenSalt-->
     </sql>
 
@@ -105,7 +106,7 @@
         where id = #{id,jdbcType=BIGINT}
     </update>
 
-    <update id="updateById" parameterType="com.jerry.base.authority.entity.User">
+    <update id="update" parameterType="com.jerry.base.authority.entity.User">
         update t_user
         set modifyTime = now(),
             remark = #{remark,jdbcType=VARCHAR},

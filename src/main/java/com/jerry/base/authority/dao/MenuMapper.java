@@ -17,15 +17,13 @@ public interface MenuMapper {
 
     int deleteRelationshipPrivilegeWithRole(@Param("ids") List<Long> ids);
 
-    int deleteRoleRelationship(int menuId, int roleId);
+    int deleteRoleRelationship(long roleId);
 
     int save(Menu record);
 
-    int saveRelationshipWithRole(int menuId, int roleId);
+    int saveRelationshipWithRole(@Param("menuIds") List<Long> menuIds, @Param("roleId") long roleId);
 
-    int updateByIdSelective(Menu record);
-
-    int updateById(Menu record);
+    int update(Menu record);
 
     Menu findById(Long id);
 
@@ -33,7 +31,7 @@ public interface MenuMapper {
 
     Menu findByPath(String path);
 
-    List<Menu> getMenuList(@Param("ids") List<Long> ids);
+    List<Menu> list(@Param("ids") List<Long> ids, @Param("keyword") String keyword);
 
     List<Menu> getMenuListWithoutSubList();
 }

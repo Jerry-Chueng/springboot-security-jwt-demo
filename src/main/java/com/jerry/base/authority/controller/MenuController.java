@@ -18,26 +18,25 @@ import java.util.List;
  * @author: Jerry
  * @Project: demo
  */
-@Api(value = "菜单操作", tags = "菜单对象")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth/menu")
+@Api(value = "菜单操作", tags = "菜单对象")
 public class MenuController extends BaseController {
 
     private final MenuManager menuManager;
 
-    @ApiOperation(value = "获取菜单List", notes = "获取菜单List")
+    @ApiOperation(value = "根据角色获取菜单", notes = "根据角色获取菜单")
     @PostMapping("/list")
     public Response list(@RequestBody(required = false) List<Long> ids) {
         List<Menu> list = menuManager.getMenuList(ids);
         return new Response<>(list);
     }
 
-    @ApiOperation(value = "根据ID获取菜单", notes = "根据ID获取菜单")
-    @GetMapping("/{id}")
-    public Response get(@PathVariable("id")Long id) {
-        Menu menu = menuManager.findById(id);
-        return new Response<>(menu);
+    @ApiOperation(value = "获取全部菜单", notes = "获取全部菜单")
+    @GetMapping
+    public Response get(@RequestParam(required = false) String keyword) {
+        return Response.ok(menuManager.getMenuList(keyword));
     }
 
     @ApiOperation(value = "保存菜单", notes = "保存菜单")
@@ -68,13 +67,8 @@ public class MenuController extends BaseController {
 
     @ApiOperation(value = "添加关联角色", notes = "添加关联角色")
     @PostMapping("/relateRole")
-    public Response relateRole(@RequestParam Integer menuId,@RequestParam Integer roleId) {
-        return Response.ok(menuManager.saveRelationshipWithRole(menuId, roleId));
-    }
-
-    @ApiOperation(value = "删除关联角色", notes = "删除关联角色")
-    @DeleteMapping("/deleteRoleRelationship")
-    public Response deleteRoleRelationship(@RequestParam Integer menuId,@RequestParam Integer roleId) {
-        return Response.ok(menuManager.deleteRoleRelationship(menuId,roleId));
+    public Response relateRole(@RequestBody List<Long> menuIds,@RequestParam Long roleId) {
+        menuManager.saveRelationshipWithRole(menuIds, roleId);
+        return Response.ok();
     }
 }

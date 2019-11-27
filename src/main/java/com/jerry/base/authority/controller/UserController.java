@@ -28,7 +28,7 @@ public class UserController extends BaseController {
 
     private final UserManager userManager;
 
-    @ApiOperation(value = "获取用户List",notes = "获取用户List")
+    @ApiOperation(value = "获取用户",notes = "获取用户")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "keyword",value = "keyword",required = false,paramType = "query",dataType = "String"),
         @ApiImplicitParam(name = "currentPage",value = "currentPage",required = true,defaultValue = "1",paramType = "query",dataType = "Long"),

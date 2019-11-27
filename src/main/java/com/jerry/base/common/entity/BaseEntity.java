@@ -41,4 +41,7 @@ public class BaseEntity {
      */
     @ApiModelProperty(value = "remark")
     private String remark;
+
+    @ApiModelProperty(value = "hide")
+    private boolean isHide;
 }

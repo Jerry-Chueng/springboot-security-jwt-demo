@@ -1,12 +1,11 @@
 package com.jerry.base.security.configuration;
 
-import com.jerry.base.security.service.PrivilegeService;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +20,16 @@ import java.util.List;
  * @Project: demo
  */
 @Component
-public class PrivilegeInvocationSecurityMetadataSourceService implements FilterInvocationSecurityMetadataSource {
+public class PrivilegeMetadataSource implements FilterInvocationSecurityMetadataSource {
 
+
+    /**
+     * FilterSecurityInterceptor会调用此方法，
+     * 而FilterSecurityInterceptor在WebSecurityConfig中定义使用
+     * @param object
+     * @return
+     * @throws IllegalArgumentException
+     */
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
 
@@ -31,28 +38,11 @@ public class PrivilegeInvocationSecurityMetadataSourceService implements FilterI
             return SecurityConfig.createList("ROLE_ANONYMOUS");
         }
 
-        String requestUrl = ((FilterInvocation) object).getRequestUrl();
-        int firstQuestionMarkIndex = requestUrl.indexOf("?");
-        if (firstQuestionMarkIndex != -1) {
-            requestUrl = requestUrl.substring(0, firstQuestionMarkIndex);
-        }
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
 
-        List<ConfigAttribute> configAttributes = PrivilegeService.getPrivilegeMeta(requestUrl);
+        String[] list = authorities.stream().map(GrantedAuthority::getAuthority).toArray(String[]::new);
 
-        if (configAttributes == null || configAttributes.size() == 0) {
-            return SecurityConfig.createList("ROLE_ANONYMOUS");
-        }
-
-        return configAttributes;
-
-//        if (configAttributes == null) {
-//            return SecurityConfig.createList();
-//        } else if (menu != null && menu.getRoles().size() == 0) {
-//            throw new AccessDeniedException("无权限访问");
-//        }
-//        Set<Role> roles = menu.getRoles();
-//        List<String> roleNameList = roles.stream().map(role -> role.getName()).collect(Collectors.toList());
-//        return SecurityConfig.createList(roleNameList.toArray(new String[roleNameList.size()]));
+        return SecurityConfig.createList(list);
     }
 
     @Override

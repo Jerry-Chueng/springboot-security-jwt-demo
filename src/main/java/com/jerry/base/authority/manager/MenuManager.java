@@ -1,6 +1,7 @@
 package com.jerry.base.authority.manager;
 
 import com.jerry.base.authority.dao.MenuMapper;
+import com.jerry.base.authority.dao.RoleMapper;
 import com.jerry.base.authority.entity.Menu;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,16 +23,21 @@ public class MenuManager {
 
     private final MenuMapper menuMapper;
 
+    private final RoleMapper roleMapper;
+
     public List<Menu> getMenuList(List<Long> ids){
-        List<Menu> menuList = menuMapper.getMenuList(ids);
+        return menuMapper.list(ids,null);
+    }
+
+    public List<Menu> getMenuList(String keyword){
+        return menuMapper.list(null,keyword);
+    }
+
+    public void handleForEach(Menu menu,List<Menu> menus){
 //        List<Menu> menus = new ArrayList<>();
 //        for (Menu menu : menuList) {
 //            handleForEach(menu,menus);
 //        }
-        return menuList;
-    }
-
-    public void handleForEach(Menu menu,List<Menu> menus){
         if (menu.getParentId() != 0) {
             for (Menu m : menus) {
                 if (m.getId() == menu.getParentId()) {
@@ -68,25 +74,21 @@ public class MenuManager {
         return menuMapper.save(menu);
     }
 
-    public int saveRelationshipWithRole(Integer menuId,Integer roleId){
-        return menuMapper.saveRelationshipWithRole(menuId, roleId);
-    }
-
     public int update(Menu menu){
-        return menuMapper.updateById(menu);
+        return menuMapper.update(menu);
     }
 
-    public int updateByIdSelective(Menu menu){
-        return menuMapper.updateByIdSelective(menu);
-    }
-
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int delete(List<Long> ids) {
         menuMapper.deleteRelationshipPrivilegeWithRole(ids);
         return menuMapper.deleteById(ids);
     }
 
-    public int deleteRoleRelationship(int menuId,int roleId) {
-        return menuMapper.deleteRoleRelationship(menuId, roleId);
+    @Transactional(rollbackFor = Exception.class)
+    public void saveRelationshipWithRole(List<Long> menuIds,Long roleId){
+        menuMapper.deleteRoleRelationship(roleId);
+        if (!menuIds.isEmpty()){
+            menuMapper.saveRelationshipWithRole(menuIds, roleId);
+        }
     }
 }
